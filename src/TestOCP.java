@@ -26,6 +26,10 @@ public class TestOCP {
     public static final String url2 = "jdbc:oracle:thin:@10.58.3.198:1521/roaming";
     public static final String user2 = "autodt";
     public static final String pass2 = "lsdkTTeAR";
+
+    public static final String url3 = "jdbc:mariadb:thin:@10.255.216.33/multi_tenant";
+    public static final String user3 = "root";
+    public static final String pass4 = "root";
 }
 
 class Test01 {
@@ -216,7 +220,7 @@ class Test09 {
     }
 }
 
-// cau nay chu y: neu them abstract vao operator thi se in ra on off
+// cau nay chu y: neu them abstract vao operator thi van error
 class Test10 {
     public abstract class Operator {
         protected abstract void turnON();
@@ -583,6 +587,19 @@ class Test67{
     }
 }
 
+class Test86 {
+    public static void main(String[] args) {
+//        Path path1 = Paths.get("/software/././sys/readme.txt"); 5 : 3: 6
+        Path path1 = Paths.get("/software/.././sys/readme.txt"); // 5: 2: 7
+        Path path2 = path1.normalize();
+        Path path3 = path2.relativize(path1);
+
+        System.out.println(path1.getNameCount());
+        System.out.println(" : "+path2.getNameCount() +" "+path2);
+        System.out.println(" : "+path3.getNameCount()+ " "+path3);
+    }
+}
+
 class Test88 {
     public static void main(String[] args) {
         Locale currentLocale = new Locale.Builder().setRegion("US").setLanguage("en").build();
@@ -688,6 +705,33 @@ class Test118 {
             System.out.println("Logged out at: " + logoutTime);
         else
             System.out.println("Can*t logout");
+
+    }
+}
+
+class Test119 {
+    public static void main(String[] args) {
+        List<String> words = Arrays.asList("win","try","best", "luck", "do");
+
+        Predicate<String> test1 = w -> {
+            System.out.println("Checking...");
+            return w.equals("do");
+        };
+
+        // case nay thi loi o n2
+        /*Predicate test2 = (String w) -> w.length() > 3; // n2
+        words.stream()
+                .filter(test2)
+                .filter(test1)
+                .count();*/
+
+        // case nay thi dung, in ra Checking... Checking...
+        Predicate<String> test2 =  w -> w.length() > 3; // n2
+        words.stream()
+                .filter(test2)
+                .filter(test1)
+                .count();
+
 
     }
 }
@@ -956,12 +1000,29 @@ class Test139{
         System.out.println(message.getString("inquiry"));
     }
 }
+
+class Test140 {
+    public static void main(String[] args) {
+        List<String> qwords = Arrays.asList("why", "what", "when");
+        BinaryOperator<String> operator = (s1, s2) -> s1.concat(s2);
+        String sen = qwords.stream()
+//                .sorted() // theem o day thi se thanh (Word: what when why)
+                .reduce("Word: ", operator);
+//                .sorted(); // khong them sort o day duoc se bi compile fail
+
+        System.out.println(sen);
+    }
+}
+
+
 class Test143 {
     public static void main(String[] args) {
         Stream.of("Java", "Unix", "Linux")
                 .filter(s -> s.contains("n"))
-                .peek(s -> System.out.println("P: " + s))
-                .findFirst();
+                .peek(s -> System.out.println("PEEK: " + s))
+//                .findFirst();
+//                .sorted()
+                .findAny();
     }
 }
 
