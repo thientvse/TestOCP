@@ -1,4 +1,3 @@
-import javax.swing.text.html.Option;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,10 +7,8 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.time.LocalDate;
-import java.time.Month;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.*;
@@ -847,8 +844,16 @@ class Q86{
 
     // normalize:
     // relative:
+
+    /*
+    /software/.././sys/readme.txt
+    /sys/readme.txt
+    ../../software/.././sys/readme.txt
+    */
+    // 5 2 7
     public static void main(String[] args) {
 //        Path path1 = Paths.get("/software/././sys/readme.txt");
+//        Path path1 = Paths.get("/software/.././sys/readme.txt");
         Path path1 = Paths.get("/software/.././sys/readme.txt");
         Path path2 = path1.normalize();
         Path path3 = path2.relativize(path1);
@@ -861,5 +866,152 @@ class Q86{
         System.out.println(" : "+path2.getNameCount());
         System.out.println(" : "+path3.getNameCount());
     }
+}
+
+class Q87{ // chu y
+    static class Product {
+        String name;
+        int qty;
+
+        public Product(String name, int qty) {
+            this.name = name;
+            this.qty = qty;
+        }
+
+        @Override
+        public String toString() {
+            return "Product{" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
+
+        static class ProductFilter{
+            public static boolean isAvaiable(Product p) { // line n1
+                return p.qty >= 10;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Product> products = Arrays.asList(
+                new Product("MotherBoard", 5),
+                new Product("Speaker", 20)
+        );
+
+        products.stream()
+                .filter(Product.ProductFilter::isAvaiable)  // line 2
+                .forEach(p -> System.out.println(p));
+    }
+}
+
+class Q88 {
+    public static void main(String[] args) {
+//        Locale currentLocale = new Locale.Builder().setRegion("DE").setLanguage("de").build();
+        // neu region ,language khong co thi lay mac dinh gia tri english
+        Locale currentLocale = new Locale.Builder().setRegion("DE").setLanguage("de").build();
+        ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
+
+        // neu set chi tiet ten file thi van lay dc
+//        ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle_fr_FR", currentLocale);
+
+        Enumeration<String> names = messages.getKeys();
+
+        while (names.hasMoreElements()){
+            String key = names.nextElement();
+            String name = messages.getString(key);
+
+            System.out.println(key +" = "+name);
+
+        }
+    }
+}
+
+class Q89{
+    public static void doStuff(String s){
+        try {
+            if (s == null){
+                throw new NullPointerException();
+            }
+        } finally {
+            System.out.println("-finally-");
+        }
+
+//        System.out.println("-doStuff-");
+    }
+
+    public static void main(String[] args) {
+        try {
+            doStuff(null);
+        } catch (NullPointerException npe){
+            System.out.println("-catch-");
+        }
+
+        System.out.println("-doStuff-");
+    }
+}
+
+class Q90 {
+    public class Foo {
+        public void methodB(String s){
+            System.out.println("Foo "+s);
+        }
+    }
+
+    public class Bar extends Foo{
+        public void methodB(String s){
+            System.out.println("Bar "+s);
+        }
+    }
+    public class Baz extends Bar{
+        public void methodB(String s){
+            System.out.println("Baz "+s);
+        }
+    }
+
+    public class Daze extends Baz {
+        private Bar bb = new Bar();
+
+        public void methodB(String s) {
+            bb.methodB(s);
+            super.methodB(s);
+        }
+    }
+
+    public static void main(String[] args) {
+//        Baz d = new Daze();
+//        d.methodB("Hello");
+    }
+}
+
+class Q95{
+    // neu khong implemen Autocloseable thi loi o n2
+    // neu implement thi loi o n1
+    static class DataConverter implements AutoCloseable {
+//    class DataConverter {
+        public void copyFlatFilesToTables(){
+
+        }
+        public void close() throws Exception {
+            throw  new RuntimeException(); // line n1 compile fail neu co AutoCloseable
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        try (DataConverter dc = new DataConverter()) { // line n2
+            dc.copyFlatFilesToTables();
+        }
+    }
+}
+
+class Q97 {
+    public static void main(String[] args) {
+        ZoneId zone = ZoneId.of("America/New_York");
+        ZonedDateTime dt = ZonedDateTime.of(LocalDate.of(2015,3,8), LocalTime.of(1,0), zone);
+
+        ZonedDateTime dt2 = dt.plusHours(2);
+        System.out.print(DateTimeFormatter.ofPattern("H:mm - ").format(dt2));
+        System.out.println(" diff: "+ChronoUnit.HOURS.between(dt, dt2));
+    }
+
 }
 
