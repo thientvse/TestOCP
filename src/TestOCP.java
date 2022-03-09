@@ -1147,19 +1147,20 @@ class Test154 {
 }
 
 class Test155 {
-    class Video {
-        public void play() throws IOException {
-            System.out.println("Video play");
-        }
-    }
-
-    class Game extends Video {
-//        public void play() throws Exception {
+//    class Video {
+//        public void play() throws IOException {
+//            System.out.println("Video play");
+//        }
+//    }
+//
+//    class Game extends Video {
+//        public void play() throws IOException {
 //            super.play();
 //            System.out.println("Video play");
 //
 //        }
-    }
+//    }
+
 }
 
 class Test157 {
@@ -1260,7 +1261,7 @@ class Test161 {
             return "Callable";
         }
     }
-
+//https://docs.oracle.com/cd/E13222_01/wls/docs45/classdocs/java.sql.Statement.html
     public static void main(String[] args) throws Exception {
         ExecutorService es = Executors.newCachedThreadPool();
         Runnable r1 = new ThreadRunner();

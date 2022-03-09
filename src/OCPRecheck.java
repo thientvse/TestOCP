@@ -1,12 +1,11 @@
+import javax.smartcardio.Card;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+import java.text.NumberFormat;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -15,8 +14,12 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.*;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
+
+import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class OCPRecheck {
     public static final String url1 = "jdbc:mariadb:thin:@10.255.216.33/multi_tenant";
@@ -1015,3 +1018,832 @@ class Q97 {
 
 }
 
+class Q98 {
+
+    enum Course {
+        JAVA(100),
+        J2ME(150);
+        private int cost;
+        Course(int c) {
+            this.cost = c;
+        }
+
+        public int getCost() {
+            return cost;
+        }
+    }
+
+    public static void main(String[] args) {
+        for (Course a: Course.values()) {
+            System.out.println(a + " Feee "+a.getCost());
+        }
+    }
+}
+
+class Q99{
+    static class Resource implements AutoCloseable {
+
+        @Override
+        public void close() throws Exception {
+            System.out.println("Close-");
+        }
+
+        public void open(){
+            System.out.println("Open-");
+        }
+    }
+
+    public static void main(String[] args) {
+        Resource res1 = new Resource();
+
+        try {
+            res1.open();
+            res1.close();
+        } catch (Exception e) {
+            System.out.println("Exception - 1");
+        }
+
+        res1.open();
+    }
+}
+
+class Q100 {
+    public static void main(String[] args) {
+        List<String>  cs = Arrays.asList("Java", "Java EE", "Java ME");
+        // line 1
+        boolean b = cs.stream().allMatch(w -> w.equals("Java"));
+        System.out.println(b);
+    }
+}
+
+class Q101{
+    public static void main(String[] args) {
+        final String str1 = "Java";
+        StringBuffer strBuf = new StringBuffer("Course");
+        UnaryOperator<String> u = (str2) -> str1.concat(str2); // line n1
+        UnaryOperator<String> c = (str3) -> str3.toLowerCase();
+        System.out.println(u.apply(c.apply(str1))); // line n2
+//        System.out.println(u.apply(c.apply(strBuf))); // line n2
+    }
+}
+
+class Q102 {
+    public static void main(String[] args) {
+        double fuelLevel = 0;
+
+//        assert fuelLevel < 0: System.exit(0); // void not allow here
+//        assert fuelLevel < 0: System.exit(0); // void not allow here
+
+          assert fuelLevel > 0 : "Imposible fuel";
+//          assert (fuelLevel > 0) : System.out.println("Imposible fuel"); // void not allow here
+    }
+}
+
+class Q103{
+    public static void main(String[] args) {
+        List<Integer> li = Arrays.asList(10,20,30);
+        Function<Integer, Integer> fn = f1 -> f1+f1;
+        Consumer<Integer> conVal = s -> System.out.println("Val: "+s+" ");
+        li.stream().map(fn).forEach(conVal);
+    }
+}
+
+class Q104 { // note
+    public static Optional<String> getCountry(String loc){
+        Optional<String> couName = Optional.empty();
+        if ("Paris".equals(loc)){
+            couName = Optional.of("France");
+        } else if ("Mumbai".equals(loc)){
+            couName = Optional.of("India");
+        }
+
+        return couName;
+    }
+
+    public static void main(String[] args) {
+        Optional<String> city1 = getCountry("Paris");
+        Optional<String> city2 = getCountry("Las Vegas");
+        Optional<String> city3 = getCountry("Mumbai");
+        System.out.println(city1.orElse("Not Found"));
+
+        if (city2.isPresent()){
+            city2.ifPresent(x -> System.out.println(x));
+        } else if (city3.isPresent()){
+            // orElse neu khon co gia tri se lay trong else
+            System.out.println(city3.orElse("Not Found"));
+            // neu chi in city3 thi ra Optional[India]
+            System.out.println(city3);
+        }
+        else {
+            System.out.println(city2.orElse("Not Found"));
+        }
+    }
+}
+
+class Q105{
+    public static void main(String[] args) {
+//        Path ip = new Paths("First.txt");
+//        Path ip = Paths.toPath("/First.txt");
+//        Path ip = new Path("First.txt");
+        Path ip = Paths.get("/","First.txt");
+
+        System.out.println(ip);
+    }
+}
+
+class Q106{
+    public static void main(String[] args) {
+        try {
+            Connection conn = DriverManager.getConnection(OCPRecheck.url1, OCPRecheck.user1, OCPRecheck.pass1);
+            String query = "SELECT * FROM Employee WHERE ID = 110";
+            Statement stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery(query);
+            System.out.println("Employee: "+rs.getInt("ID"));
+        } catch (Exception e){
+
+        }
+//        catch (SQLException e) {
+//            System.out.println("Error");
+//        }
+    }
+}
+
+class Q107 {
+
+    public static class TestConsole {
+        Console console = System.console();
+        char[] pass = console.readPassword("Enter pass: "); // line n1
+
+        // dung readLine thi tra ve String
+//        String pass = console.readLine("Enter pass: "); // line n1
+        String password = new String(pass);
+//        System.out.println(password);
+    }
+
+    public static void main(String[] args) {
+       new Q107.TestConsole();
+    }
+}
+
+class Q108{
+    // thay language, country khac thi lay theo gia tri cua country do, vi du vi,VN la 15Đ
+    public static void main(String[] args) {
+        double d = 15;
+        Locale l =new Locale("en","US");
+//        Locale l =new Locale("fr","FR");
+//        Locale l =new Locale("fr","FR");
+        NumberFormat formatter = NumberFormat.getCurrencyInstance(l);
+//        NumberFormat formatter = NumberFormat.getNumberInstance();
+        System.out.println(formatter.format(d));
+    }
+}
+
+class Q111{
+    public static class Product {
+        public double applyDiscount(double price) {
+            assert (price > 0); // Line nl
+            return price * 50;
+        }
+    }
+
+    public static void main(String[] args) {
+        Product p = new Product();
+        double newPrice =
+                p.applyDiscount(Double.parseDouble(args[0]));
+        System.out.println("New Price:" + newPrice);
+    }
+}
+
+class Q112{
+    public static void main(String[] args) {
+//        LocalTime now = LocalTime.now();
+//        LocalTime now = LocalTime.of(8,30); // -1 HOURS
+//        LocalTime now = LocalTime.of(8,0); // 0 HOURS
+//        LocalTime now = LocalTime.of(6,30); // 60 minutes
+        LocalTime now = LocalTime.of(6,30); // 60 minutes
+        long timeToBreakfast = 0;
+        LocalTime office_start = LocalTime.of(7, 30);
+//        if (office_start.isAfter(now)){
+        if (office_start.isAfter(now)){ // compare with now > 0
+            timeToBreakfast = now.until(office_start, MINUTES);
+
+        } else {
+            timeToBreakfast = now.until(office_start, HOURS);
+        }
+        System.out.println(timeToBreakfast);
+    }
+}
+class Q113 {
+    static class R implements Runnable {
+
+        @Override
+        public void run() {
+            System.out.println("Run...");
+        }
+    }
+
+    static class C implements Callable<String> {
+
+        @Override
+        public String call() throws Exception {
+            return "Call..";
+        }
+    }
+
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        ExecutorService es = Executors.newSingleThreadExecutor();
+        es.execute(new R()); // line 1
+        Future<String> f1 = es.submit(new C()); // line 2
+        System.out.println(f1.get());
+        es.shutdown();
+    }
+}
+
+class Q115{
+
+    // Susan allen David
+    // pop, remove deu remove phan tu dau tien
+    public static void main(String[] args) {
+        Deque<String> queue = new ArrayDeque<>();
+        queue.add("Susan");
+        queue.add("Allen");
+        queue.add("David");
+
+        // pop
+//        String popItem = queue.pop();
+//        System.out.println("PopItem " +popItem);
+
+        // remove
+        String popItem = queue.remove();
+        System.out.println("RemoveItem " +popItem);
+
+        System.out.println(queue.pop());
+        System.out.println(queue.remove());
+        System.out.println(queue);
+    }
+}
+
+class Q117{
+    public static void main(String[] args) {
+        List<String> valList = Arrays.asList("","George","","John","Jim");
+        // ne co null thi exception n2
+//        List<String> valList = Arrays.asList("","George",null,"John","Jim");
+        Long newVal = valList.stream() // line n1
+//                        .filter(x -> !x.isEmpty())
+                        .filter(x -> x.isEmpty())
+                        .count(); // line n2
+        System.out.println(newVal);
+    }
+}
+
+class Q118{
+    public static void main(String[] args) throws InterruptedException {
+        // Login time ;2015-01—12T21:58:817Z
+        Instant loginTime = Instant.now();
+        Thread.sleep(1000);
+//        Thread.sleep(36000);
+        // Logout time:2015-01-12T21:58:B60Z
+        Instant logoutTime = Instant.now();
+        loginTime = loginTime.truncatedTo(ChronoUnit.MINUTES);    // line nl
+        logoutTime = logoutTime.truncatedTo(ChronoUnit.MINUTES);
+        if (logoutTime.isAfter(loginTime))
+            System.out.println("Logged out at: " + logoutTime);
+        else
+            System.out.println("Can*t logout");
+
+    }
+}
+
+class Q119{
+    public static void main(String[] args) {
+        List<String> words = Arrays.asList("win","try","best","luck","do");
+
+        Predicate<String> test1 = w -> {
+            System.out.println("Checking...");
+            return  w.equals("do");   // line n1
+        };
+
+        Predicate<String> test2 =  w -> w.length() > 3; // line n2
+//        Predicate test2 = (String w) -> w.length() > 3; // line n2
+
+        words.stream()
+                .filter(test2)
+                .filter(test1)
+                .count();
+    }
+
+}
+
+class Q125{
+
+    //
+    public static void main(String[] args) {
+        List<Integer> prices = Arrays.asList(3,4,5);
+        prices.stream()
+                .filter(e -> e > 4)
+                .peek(e -> System.out.println("Prices "+e))
+                .map(n -> n-1)
+                .forEach(n -> System.out.println("New Prices "+n)); // Prices 5 New Prices 4
+
+//                .peek(n -> System.out.println("new Prices ")+n);
+    }
+}
+
+class Q127{
+    // error ca 2
+    /*static class ProductCode<T extends S, S> {
+        T c1;
+        S c2;
+    }*/
+
+    // khong error
+    static class ProductCode<T, S> {
+        T c1;
+        S c2;
+    }
+
+    public static void main(String[] args) {
+        ProductCode<Number, Integer> c1 = new ProductCode<Number, Integer>();
+        ProductCode<Number, String> c2 = new ProductCode<Number, String>();
+    }
+}
+
+class Q128{
+    public static void main(String[] args) {
+        List<String> nums = Arrays.asList("EE","SE");
+        String ans = nums
+//                .parallelStream() // chia stream thanh cac substream  sau no cong voi nhau : Java EE Java SE
+                .stream() // neu la stream thi se la lan luot thao tao Java EESE
+                .reduce("Java ", (a,b) -> a.concat(b));
+        System.out.println(ans);
+    }
+}
+
+class Q130{
+    public static class Product{
+        String name;
+        Integer price;
+
+        public Product(String name, Integer price) {
+            this.name = name;
+            this.price = price;
+        }
+
+        public Integer getPrice() {
+            return price;
+        }
+
+        public void setPrice(Integer price) {
+            this.price = price;
+        }
+
+        public void printVal(){
+            System.out.println(name + " Prices: "+price+" ");
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Product> li = Arrays.asList(
+                new Product("TV", 1000),
+                new Product("Refrigertor", 2000));
+
+        Consumer<Product> raise = e -> e.setPrice(e.getPrice() + 100);
+        li.forEach(raise);
+        li.stream().forEach(Product::printVal);
+
+    }
+}
+
+class Q132{
+    public static void main(String[] args) {
+        final List<String> list = new CopyOnWriteArrayList<>();
+        final AtomicInteger ai = new AtomicInteger();
+        final CyclicBarrier barrier = new CyclicBarrier(2, new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(list);
+            }
+        });
+        Runnable r = new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(1000 * ai.incrementAndGet());
+                    list.add("X");
+                    barrier.await();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (BrokenBarrierException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        new Thread(r).start();
+        new Thread(r).start();
+        new Thread(r).start();
+        new Thread(r).start();
+    }
+}
+
+class Q133{
+    public static void main(String[] args) throws IOException {
+
+
+        // A
+        Stream<Path> stream = Files.list(Paths.get("/home/vtn-thientv7-u/Documents/TestOCP/src/company"));
+        stream.forEach(s -> System.out.println(s));
+    }
+}
+
+class Q134{
+    static class Person {
+        String name;
+        int age;
+
+        public Person(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Person> sts = Arrays.asList(
+                new Person("Jack", 30),
+                new Person("Mike Hill", 21),
+                new Person("Thomas Hill", 24));
+
+        Stream<Person> resList = sts.stream().filter(s -> s.getAge() >= 25); // line n1
+        long count = resList.filter(s -> s.getName().contains("Hill")).count();
+
+        System.out.println(count);
+    }
+}
+
+class Q135 {
+    class Computer{
+        private Card sCard = new SoundCard();
+        private abstract class Card{}
+        private class SoundCard extends Computer.Card {}
+    }
+}
+
+class Q136{
+    public static void main(String[] args) {
+        Deque<Integer> nums = new ArrayDeque<>();
+        nums.add(1000);
+        nums.add(3000);
+        nums.push(4000);
+        nums.push(2000);
+
+        System.out.println(nums);
+
+
+        Integer i1 = nums.remove();
+        Integer i2 = nums.pop();
+
+
+        System.out.println(i1 + " : "+i2);
+
+    }
+}
+
+class Q137{ // note
+    public static void main(String[] args) {
+        //1234567890
+        try (FileInputStream fis = new FileInputStream("/home/vtn-thientv7-u/Documents/TestOCP/src/version.txt");
+             InputStreamReader isr = new InputStreamReader(fis);
+             BufferedReader br = new BufferedReader(isr);) {
+            if (br.markSupported()) {
+                System.out.print((char) br.read());
+                br.mark(2); // pos 2
+                System.out.print((char) br.read());
+                System.out.print((char) br.read());
+                br.reset();
+                System.out.print((char) br.read());
+
+                // 1232
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+
+class Q138{
+    public static void main(String[] args) {
+        BiPredicate<String, String> bp = (String s1, String s2) -> {
+            return s1.contains("SG")
+                    && s2.contains("Java");
+        };
+
+        BiFunction<String, String, Integer> bf = (String s1, String s2) -> {
+            int fee = 0;
+            if (bp.test(s1, s2)) {
+                fee = 100;
+            }
+            return fee;
+        };
+
+        int feel = bf.apply("D101SG", "Java Programming");
+        System.out.println(feel);
+
+    }
+}
+
+class Q139{
+    // khong co language hay region thi lay gia tri trong file mac dinh
+    // lay sai key se bi loi
+    // phan biet hoa thuong
+    // getobject voi key dung van duoc
+    public static void main(String[] args) {
+//        Locale currentLocale = new Locale("de","DE");
+        Locale currentLocale = new Locale.Builder().setLanguage("vi").setRegion("VN").build();
+        // line 1
+        // ten file phai dung trong khai bao
+        ResourceBundle messages = ResourceBundle.getBundle("MessagesBundleTest", currentLocale);
+//        ResourceBundle messages = ResourceBundle.getBundle("MessagesBundleTest_vi_VN", currentLocale);
+//        System.out.println(messages.getObject("inquiry"));
+        System.out.println(messages.getString("inquiry"));
+    }
+
+}
+
+class Q140 {
+    public static void main(String[] args) {
+        List<String> qwords = Arrays.asList("why", "what", "when");
+        BinaryOperator<String> operator = (s1, s2) -> s1.concat(s2); // line n1
+        String sen = qwords.stream()
+//                .sorted() // them o day thi se sort truoc khi reduce
+                .reduce("Word: ", operator);
+//                .sorted();// them sort o day la loi
+        System.out.println(sen);
+    }
+}
+
+class Q141{
+    interface Interface1 {
+        public default void sayHi(){
+            System.out.println("Hi Interface-1");
+        }
+    }
+
+    interface Interface2{
+        public default void sayHi(){
+            System.out.println("Hi Interface -2");
+        }
+    }
+
+}
+
+class MyClass implements Q141.Interface1, Q141.Interface2 {
+    public static void main(String[] args) {
+        Q141.Interface1 obj = new MyClass();
+        obj.sayHi();
+    }
+
+    @Override
+    public void sayHi() {
+        System.out.println("Hi Myclass");
+    }
+}
+
+class Q142{
+    static class Block {
+        String color;
+        int size;
+
+        public Block(int size, String color) {
+            this.size = size;
+            this.color = color;
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Block> blocks = new ArrayList<>();
+        blocks.add(new Block(10, "Green"));
+        blocks.add(new Block(7, "Red"));
+        blocks.add(new Block(12, "Blue"));
+
+        Collections.sort(blocks, new ColorSorter());
+    }
+
+    static class ColorSorter implements Comparator<Block> {
+
+        @Override
+        public int compare(Block o1, Block o2) {
+            return o1.color.compareTo(o2.color);
+        }
+    }
+}
+
+class Q143{
+    public static void main(String[] args) {
+        Stream.of("Java","Unix", "Linux")
+                .filter(s -> s.contains("n"))
+//                .sorted()
+                .peek(s -> System.out.println("PEEK: "+s))
+                // line 1
+//                .findFirst();
+                .findAny();
+        // cac truong hop anyMatch, allMatch, noneMatch phai add Predicate.
+    }
+}
+
+class Q144{
+    class Person implements Comparable<Person>{ // line n1
+        String name;
+        Person(String name){
+            this.name = name;
+        }
+
+        @Override
+        public int compareTo(Person p) {
+            return this.name.compareTo(p.name);
+        }
+
+        // line 2
+    }
+}
+
+class Q147{
+    public static class ResourcesApp {
+        public void loadResourceBundle() {
+            ResourceBundle resource = ResourceBundle.getBundle("Greetings", Locale.UK);
+//            System.out.println(resource.getString("hello_msg"));
+//            System.out.println(resource.getString("HELLO_MSG"));
+            System.out.println(resource.getObject("HELLO_MSG"));
+//            System.out.println(resource.getString("hello_msg"));
+//            System.out.println(resource.getString("hello_msg")); // phan biet hoa thuong
+//            System.out.println(resource.getObject(1)); // compile fail
+        }
+
+        public static void main(String[] args) {
+            new ResourcesApp().loadResourceBundle();
+        }
+    }
+}
+
+class Q148{
+    public static class Test {
+        List<String> list = null;
+
+        public void printValue() {
+            System.out.println(getList());
+        }
+
+        public List<String> getList() {
+            return list;
+        }
+
+        public void setList(List<String> list) {
+            this.list = list;
+        }
+    }
+
+    public static void main(String[] args) {
+        List<String> li = Arrays.asList("Dog", "Cat", "Mouse");
+        Test test = new Test();
+        test.setList(li.stream().collect(Collectors.toList()));
+//        test.getList().forEach(Test::printValue);
+        // compile fail
+    }
+}
+
+class Q149 { // note
+    public static void main(String[] args) throws SQLException {
+        Connection connection = DriverManager.getConnection(TestOCP.url, TestOCP.user, TestOCP.pass);
+        Statement st = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+        st.execute("select * from student");
+        ResultSet rs = st.getResultSet();
+//        Moves the cursor to the given row number in this <code>ResultSet</code> object
+//        The first row is row 1, the second
+//                * is row 2, and so on.
+        rs.absolute(3);
+        rs.moveToInsertRow();
+        rs.updateInt(1, 113);
+        rs.updateString(2, "Jan");
+        rs.updateString(3, "jann@uni.com");
+        /**
+         * Updates the underlying database with the new contents of the
+         * current row of this <code>ResultSet</code> object.
+         * This method cannot be called when the cursor is on the insert row.
+         *
+         * @exception SQLException if a database access error occurs;
+         * the result set concurrency is <code>CONCUR_READ_ONLY</code>;
+         *  this method is called on a closed result set or
+         * if this method is called when the cursor is on the insert row
+         * @exception SQLFeatureNotSupportedException if the JDBC driver does not support
+         * this method
+         * @since 1.2
+         */
+        rs.updateRow();
+        /**
+         * Refreshes the current row with its most recent value in
+         * the database.  This method cannot be called when
+         * the cursor is on the insert row.
+         *
+         */
+        rs.refreshRow();
+        System.out.println(rs.getInt(1));
+        System.out.println(rs.getString(2));
+        System.out.println(rs.getString(3));
+    }
+}
+
+class Q150{
+    public static void main(String[] args) {
+        IntConsumer consumer = e -> System.out.println(e);
+        Integer value = 90;
+
+//        Function<Integer> funRef = e -> e + 10; // 2 param
+
+//        IntFunction funRef = e -> e +10;
+//        Integer result = funRef.apply(10); // phai cast
+
+
+        ToIntFunction<Integer> funRef = e -> e+10;
+        int result = funRef.applyAsInt(value);
+
+        consumer.accept(result);
+    }
+}
+
+class Q153{
+    public static void main(String[] args) {
+        IntStream str = IntStream.of(1, 2, 3, 4);
+//        Stream str = Stream.of(1, 2, 3, 4);
+        Double d = str.average().getAsDouble();
+        System.out.println("Average = "+d);
+    }
+
+}
+
+
+class Q155{
+    class Video {
+        public void play() throws IOException {
+            System.out.println("Video play");
+        }
+    }
+
+    class Game extends Video {
+        public void play() throws IOException {
+            super.play();
+            System.out.println("Video play");
+
+        }
+    }
+}
+
+class Q176{ // note
+    public class Canvas implements Drawable {
+        public void draw() {
+        }
+    }
+
+    public abstract class Board extends Canvas {
+    }
+
+    public class Paper extends Canvas {
+        protected void draw(int color) {
+        }
+    }
+
+//   public class Frame extends Canvas implements Drawable {
+//        public void resize() {
+//        }
+//
+//        abstract void open();
+//    }
+
+    public interface Drawable {
+        public abstract void draw();
+    }
+}
+
+class Q192{
+    public static void main(String[] args) {
+//        BiFunction<Integer, Double, Integer> val = (t1, t2) -> t1 + t2;
+        BiFunction<Integer, Double, Double> val = (t1, t2) -> t1 + t2;
+    }
+}
+
+class Q196{
+    public static void main(String[] args) {
+        List<String> empDetails = Arrays.asList("100, Robin, HR",
+                "200, Mary, AdminServices", "101, Peter, HR");
+        empDetails.stream()
+                .filter(s -> s.contains("r"))
+//                .sorted()
+                .forEach(System.out::println);//line n1
+//                .sorted(); //line n1 // error
+    }
+}
