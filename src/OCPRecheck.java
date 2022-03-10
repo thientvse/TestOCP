@@ -4,6 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.*;
 import java.text.NumberFormat;
 import java.time.*;
@@ -22,9 +23,10 @@ import static java.time.temporal.ChronoUnit.HOURS;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class OCPRecheck {
-    public static final String url1 = "jdbc:mariadb:thin:@10.255.216.33/multi_tenant";
-    public static final String user1 = "root";
-    public static final String pass1 = "root";
+    public static final String URL = "jdbc:oracle:thin:@//localhost:1521/ORCLCDB.localdomain";
+    public static final String USER = "thientv7";
+    public static final String PASS = "1";
+
 }
 
 class Q01 {
@@ -225,7 +227,7 @@ class Q9 {
 
 class Q10 { // chon in ra ON OFF new co abstract, ne khong thi Operator loi
     // Operator.java
-    public abstract class Operator {
+   /* public abstract class Operator {
         protected abstract void turnON(); // co abstract
         protected abstract void turnOFF(); // co abstract
     }
@@ -247,11 +249,11 @@ class Q10 { // chon in ra ON OFF new co abstract, ne khong thi Operator loi
             m.turnON();
             m.turnOFF();
         }
-    }
+    }*/
 
     public static void main(String[] args) {
-//        Engine carEngine = new Engine();
-//        carEngine.operate();
+        Engine carEngine = new Engine();
+        carEngine.operate();
     }
 }
 
@@ -513,7 +515,7 @@ class Q27 {
 class Q29 {
     static Connection newConnection = null;
     public static Connection getDbConnection() throws SQLException {
-        Connection con = DriverManager.getConnection(OCPRecheck.url1, OCPRecheck.user1, OCPRecheck.pass1);
+        Connection con = DriverManager.getConnection(OCPRecheck.URL, OCPRecheck.USER, OCPRecheck.PASS);
         newConnection = con;
         return newConnection;
     }
@@ -1154,7 +1156,7 @@ class Q105{
 class Q106{
     public static void main(String[] args) {
         try {
-            Connection conn = DriverManager.getConnection(OCPRecheck.url1, OCPRecheck.user1, OCPRecheck.pass1);
+            Connection conn = DriverManager.getConnection(OCPRecheck.URL, OCPRecheck.USER, OCPRecheck.PASS);
             String query = "SELECT * FROM Employee WHERE ID = 110";
             Statement stmt = conn.createStatement();
             ResultSet rs = stmt.executeQuery(query);
@@ -1829,10 +1831,294 @@ class Q176{ // note
     }
 }
 
+class Q177{
+    public static void main(String[] args) {
+        UnaryOperator<Double> uo1 = s -> s*2; // line n1
+        List<Double> loanValues = Arrays.asList(1000.0, 2000.0);
+        loanValues.stream()
+                .filter(lv -> lv >= 1500)
+                .map(lv ->uo1.apply(lv))  // line n2
+                .forEach(s -> System.out.println(s+ " "));
+
+    }
+}
+
+class Q179{
+    public static void main(String[] args) {
+        List<String> nL = Arrays.asList("Jim","John","Jeff");
+        Function<String, String> funVal = s -> "Hello : ".concat(s);
+
+        nL.stream()
+                .map(funVal)
+//                .sorted()
+                .forEach(s -> System.out.println(s));
+
+    }
+}
+
+class Q180{
+
+    public static void main(String[] args) {
+        List<String> colors = Arrays.asList("red", "green", "yellow");
+        Predicate<String> test = n -> {
+            System.out.println("Searching...");
+            return n.contains("red");
+        };
+
+        colors.stream()
+                .filter(c -> c.length() >= 3)
+                .allMatch(test);// tat ca phai true
+//                .anyMatch(test);
+    }
+
+}
+
+class Q181{
+    public static class Emp {
+        private String eName;
+        private Integer eAge;
+
+        Emp(String eN, Integer eA) {
+            this.eName = eN;
+            this.eAge = eA;
+        }
+
+        public Integer getEAge() {
+            return eAge;
+        }
+
+        public String getEName() {
+            return eName;
+        }
+    }
+
+    public static void main(String[] args) {
+        List<Emp> li = Arrays.asList(new Emp("Sam", 20),
+                new Emp("John", 60),
+                new Emp("Jim", 51));
+        Predicate<Emp> agVal = s -> s.getEAge() <= 60; //line n1
+        li = li.stream().filter(agVal).collect(Collectors.toList());
+        Stream<String> names = li.stream().map(Emp::getEName); //line n2
+        names.forEach(n -> System.out.print(n + " "));
+    }
+}
+
+class Q182{
+    static class Book {
+        int id;
+        String name;
+
+        public Book(int id, String name) {
+            this.id = id;
+            this.name = name;
+        }
+
+        public boolean equals(Object obj) { //line n1
+            boolean output = false;
+            Book b = (Book) obj;
+            if (this.id == b.id) {
+//            if (this.name.equals(b.name)) {
+                output = true;
+            }
+            return output;
+        }
+    }
+
+    public static void main(String[] args) {
+        Book b1 = new Book(101, "Java Programing");
+        Book b2 = new Book(102, "Java Programing");
+        System.out.println(b1.equals(b2));
+    }
+}
+
+
+class Q183{
+    public static void main(String[] args) {
+        LocalDate valentinesDay =LocalDate.of(2015, Month.FEBRUARY, 14);
+        LocalDate next15days = valentinesDay.plusDays (15);
+        LocalDate nextYear = next15days.plusYears(1); // line n1
+        System.out.println(nextYear);
+    }
+}
+
+class Q186{
+    static class Caller implements Callable<String> {
+        String str;
+
+        public Caller(String s) {
+            this.str = s;
+        }
+
+        public String call() throws Exception {
+            return str.concat("Caller");
+        }
+    }
+
+    static class Runner implements Runnable {
+        String str;
+
+        public Runner(String s) {
+            this.str = s;
+        }
+
+        public void run() {
+            System.out.println(str.concat("Runner"));
+        }
+    }
+
+    public static void main(String[] args) throws InterruptedException,
+            ExecutionException {
+        ExecutorService es = Executors.newFixedThreadPool(2);
+        Future f1 = es.submit(new Caller("Call"));
+        Future f2 = es.submit(new Runner("Run"));
+        String str1 = (String) f1.get();
+        String str2 = (String) f2.get(); //line n1
+        System.out.println(str1 + ":" + str2);
+        es.shutdown();
+    }
+}
+
+class Q187{
+//    static class Vehicle implements Comparable<Vehicle> {
+    static class Vehicle  {
+        int vno;
+        String name;
+
+        public Vehicle(int vno, String name) {
+            this.vno = vno;
+            this.name = name;
+        }
+
+        public String toString() {
+            return vno + ":" + name;
+        }
+
+//        public int compareTo(Vehicle o) {
+//            return this.name.compareTo(o.name);
+//        }
+    }
+
+    public static void main(String[] args) {
+        Set<Vehicle> vehicles = new TreeSet<>();
+        vehicles.add(new Vehicle(10123, "Ford"));
+        vehicles.add(new Vehicle(10124, "BMW"));
+        System.out.println(vehicles);
+    }
+}
+
+class Q188{
+    public static void main(String[] args) {
+        /*int i;
+        char c;
+        try (FileInputStream fis = new FileInputStream ("/home/vtn-thientv7-u/Documents/TestOCP/src/courses33.txt");
+             InputStreamReader isr = new InputStreamReader(fis);) {
+            while (!isr.close()) // line n1 close la ham void nen khon them ! duoc
+            {
+                //line n1
+                isr.skip(2);
+                i = isr.read ();
+                c = (char) i;
+                System.out.print(c);
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }*/
+    }
+}
+
+class Q189 {
+    public static void main(String[] args) {
+        ZonedDateTime depart = ZonedDateTime.of(2015, 1, 15, 1, 0, 0, 0, ZoneId.of("UTC-7"));
+        ZonedDateTime arrive = ZonedDateTime.of(2015, 1, 15, 9, 0, 0, 0, ZoneId.of("UTC-5"));
+        long hrs = ChronoUnit.HOURS.between(depart, arrive); //line n1
+        System.out.println("Travel time is " + hrs + "hours");
+    }
+}
+
+class Q190{
+    public static void main(String[] args) throws IOException {
+        Path file = Paths.get("/home/vtn-thientv7-u/Documents/TestOCP/src/courses.txt");
+
+//        Stream<String> fc = Files.readAllLines(file); // require List
+
+        //
+        List<String> fc = Files.readAllLines(file);
+        fc.stream().forEach(s -> System.out.println(s));
+
+    }
+}
+
+class Q191 {
+    public static void main(String[] args) throws Exception {
+        Stream<Path> files = Files.list(Paths.get(System.getProperty("user.home")));
+        files.forEach(fName -> { //line n1
+            try {
+                Path aPath = fName.toAbsolutePath(); //line n2
+                System.out.println(fName + ":"
+                        + Files.readAttributes(aPath,
+                        BasicFileAttributes.class).creationTime
+                        ());
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            ;
+        });
+    }
+}
+
 class Q192{
     public static void main(String[] args) {
 //        BiFunction<Integer, Double, Integer> val = (t1, t2) -> t1 + t2;
         BiFunction<Integer, Double, Double> val = (t1, t2) -> t1 + t2;
+    }
+}
+
+class Q193{
+
+}
+
+class Q194{
+    static class Employee{
+        Optional<Address> address;
+
+        public Employee(Optional<Address> address) {
+            this.address = address;
+        }
+
+        public Optional<Address> getAddress() {
+            return address;
+        }
+    }
+
+    static class Address {
+        String city = "New York";
+
+        public void setCity(String city) {
+            this.city = city;
+        }
+
+        @Override
+        public String toString() {
+            return "Address{" +
+                    "city='" + city + '\'' +
+                    '}';
+        }
+
+        public String getCity() {
+            return city;
+        }
+    }
+
+    public static void main(String[] args) {
+        Address address = new Address();
+
+        Optional<Address> address1 = Optional.ofNullable(address);
+
+        Employee e1 = new Employee(address1);
+        String eAddress = (address1.isPresent()) ? address1.get().getCity() : "City Not available";
+        System.out.println(eAddress);
+
     }
 }
 
@@ -1842,8 +2128,118 @@ class Q196{
                 "200, Mary, AdminServices", "101, Peter, HR");
         empDetails.stream()
                 .filter(s -> s.contains("r"))
-//                .sorted()
+                .sorted()
                 .forEach(System.out::println);//line n1
 //                .sorted(); //line n1 // error
+    }
+}
+
+class Q197{
+    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+        Class.forName("oracle.jdbc.driver.OracleDriver");
+        Connection conn = DriverManager.getConnection(OCPRecheck.URL, OCPRecheck.USER, OCPRecheck.PASS);
+        String query = "SELECT id FROM AUTODT.EMPLOYEE";
+        try (Statement stmt = conn.createStatement()) {
+            ResultSet rs = stmt.executeQuery(query);
+            rs = stmt.executeQuery("SELECT id FROM AUTODT.CUSTOMER");
+            while (rs.next()) {
+                //process the results
+                System.out.println("Employee ID: " + rs.getInt("id"));
+            }
+        } catch (Exception e) {
+            System.out.println("Error");
+            e.printStackTrace();
+        }
+    }
+}
+
+class Q198{
+    public static void main(String[] args) {
+        List<String>  codes = Arrays.asList("A","B","C","D");
+        codes.parallelStream().forEach(s -> System.out.println(s)); // random ket qua in ra
+        System.out.println(" ");
+        codes.parallelStream().forEachOrdered(s1 -> System.out.println(s1)); // in ra theo thu tu vi da duoc ordered
+    }
+}
+
+class Q203{
+    public static void main(String[] args) {
+        List<String> str = Arrays.asList("pen", "is", "not", "a", "pencil");
+        Predicate<String> test = s -> {
+            int i = 0;
+            boolean result = s.contains("pen");
+            System.out.print((i++) + ":");
+            return result;
+        };
+        str.stream()
+                .filter(test)
+//                .findAny()
+                .findFirst()
+                .ifPresent(System.out::print);
+    }
+}
+
+class Q204{
+    static class UserException extends Exception {
+    }
+
+    static class AgeOutOfLimitException extends UserException {
+    }
+    static class App {
+        public void doRegister(String name, int age)
+                throws UserException, AgeOutOfLimitException {
+            if (name.length() < 5) {
+                throw new UserException();
+            } else if (age > 60) {
+                throw new AgeOutOfLimitException();
+            } else {
+                System.out.println("User is registered.");
+            }
+        }
+
+        public static void main(String[] args) throws UserException {
+            App t = new App();
+            t.doRegister("Mathew", 60);
+        }
+    }
+}
+
+class Q205{
+    class Vehicle {
+        String name;
+
+        Vehicle(String name) {
+            this.name = name;
+        }
+
+        String getName() {
+            return name;
+        }
+
+        void setName(String name) {
+            this.name = name;
+        }
+
+        public Vehicle() {
+        }
+    }
+
+    public static void main(String[] args) {
+
+    }
+}
+
+class Q206{
+    public static void main(String[] args) {
+        Path path1 = Paths.get("/app/./sys/");
+        Path res1 = path1.resolve("/log");
+
+        Path path2 = Paths.get("/server/exe/");
+//        Path res2 = path2.resolve("/readme/");
+        Path res2 = path2.resolve("/readme");
+
+        System.out.println(res1);
+        System.out.println(res2);
+
     }
 }
