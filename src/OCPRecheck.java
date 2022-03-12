@@ -1,8 +1,5 @@
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.sql.*;
 import java.text.NumberFormat;
@@ -823,6 +820,38 @@ class Q54{
     }
 }
 
+class Q61 {
+    public interface Moveable<Integer> {
+        public default void walk(Integer distance) {
+            System.out.println("Walking");
+        }
+        public int run (Integer distance);
+    }
+    public static void main(String[] args) {
+        // A
+        /*Moveable<Integer> animal = n -> System.out.println("Running" + n);
+        animal.run(100);
+        animal.walk(20);*/
+
+        // B // khong the convert ra voi
+        Moveable<Integer> animal = n -> n + 10;
+        animal.run(100);
+        animal.walk(20);
+
+    }
+}
+
+class Q62{
+    public static void main(String[] args) {
+//        Locale loc1 = "UK";
+//        Locale loc2 = Locale.getIntance("ru")
+//        Locale loc3 = Locale.getLocaleFactory
+
+        Locale loc4 = Locale.UK;
+        Locale loc5 = new Locale("ru", "RU");
+    }
+}
+
 class Q63 {
     public static void main(String[] args) throws FuelNotAvailException, Exception {
 //        Vehicle v = new SolarVehicle();
@@ -840,17 +869,23 @@ class Q63 {
     }
 
     class SolarVehicle extends Vehicle {
-        public void ride() throws FuelNotAvailException { //line n2
+        public void ride() throws FuelNotAvailException { //line n2 // vi tap cua Exception be hon FuelNotAvaiException
             super.ride();
         }
     }
 }
 
-class Q66 {
+class Q66 { // 2016 la nam nhuan
     public static void main(String[] args) {
         LocalDate valentinesDay = LocalDate.of(2015, Month.FEBRUARY, 14);
-        LocalDate nextYear = valentinesDay.plusYears(1);
-        nextYear.plusDays(15); // line n1
+
+        /*LocalDate nextYear = valentinesDay.plusYears(1);
+        nextYear.plusDays(15); //line n1
+        System.out.println(nextYear);*/
+
+//        nextYear.plusDays(15); // line n1
+        LocalDate nextYear = valentinesDay.plusDays(15); // line n1
+         nextYear = nextYear.plusYears(1);
         System.out.println(nextYear);
     }
 }
@@ -866,23 +901,27 @@ class Q67 { // interger + interger
 
 class Q68 {
     public static void main(String[] args) {
+        // UnaryOperator : kieu dau vao, dau ra giong nhau
         UnaryOperator<Double> uol = s -> s * 2; // line n1
 //        UnaryOperator<Integer> uol = s -> s*2; // line n1
         List<Double> loanValues = Arrays.asList(1000.0, 2000.0);
+//        List<Integer> loanValues = Arrays.asList(1000, 2000);
 
         loanValues.stream()
                 .filter(lv -> lv >= 1500)
-                .map(lv -> uol.apply(lv))  // line n2
+                .map(lv -> uol.apply(lv))  // line n2 // apply phai cung kieu
                 .forEach(s -> System.out.println(s + " "));
     }
 }
 
 class Q73 {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        ExecutorService es = Executors.newFixedThreadPool(4); // line 4
+        ExecutorService es = Executors.newCachedThreadPool(); // line 4
         Future f1 = es.submit(new CallerThread("Call"));
         String str = f1.get().toString();
+        es.shutdownNow();
         System.out.println(str);
+//        es.shutdown(); // neu co shutdown se bi terminate
     }
 
     static class CallerThread implements Callable<String> {
@@ -904,12 +943,46 @@ class Q74 {
 
 }
 
+class Hello {
+    public Hello(String say) {
+        System.out.print(say);
+    }
+
+    public void display(String say) {
+        System.out.println(say);
+    }
+}
+
+
+class CheckClass {
+    public int checkValue(String s1, String s2) {
+        return s1.length() - s2.length();
+    }
+
+
+}
+ class Q75{
+         public static void main(String[] args) {
+
+             String[] strArray = new String [] {"Tiger", "Rat", "Cat", "Lion"};
+                //line n1
+             CheckClass checkClass = new CheckClass();
+//             Arrays.sort(strArray, (CheckClass::new::checkValue());
+             for (String s : strArray)
+             {
+                 System.out.print (s + " ");
+             }
+         }
+
+ }
+
+
 class Q77 {
     public static void main(String[] args) throws IOException {
-        Path source = Paths.get("/home/vtn-thientv7-u/Documents/TestOCP/src/green.txt");
-        Path target = Paths.get("/home/vtn-thientv7-u/Documents/TestOCP/src/yellow.txt");
+        Path source = Paths.get("/home/vtn-thientv7-u/Documents/TestOCP/src/yellow.txt");
+        Path target = Paths.get("/home/vtn-thientv7-u/Documents/TestOCP/srs");
         // ham move la move luon file di khong copy
-        Files.move(source, target, StandardCopyOption.ATOMIC_MOVE);
+        Files.move(source, target, StandardCopyOption.REPLACE_EXISTING);
         // nen khi xoa file source se khong con ton tai nua
         Files.delete(source);
     }
@@ -1080,7 +1153,7 @@ class Q88 {
     public static void main(String[] args) {
 //        Locale currentLocale = new Locale.Builder().setRegion("DE").setLanguage("de").build();
         // neu region ,language khong co thi lay mac dinh gia tri english
-        Locale currentLocale = new Locale.Builder().setRegion("DE").setLanguage("de").build();
+        Locale currentLocale = new Locale.Builder().setRegion("vi").setLanguage("VN").build();
         ResourceBundle messages = ResourceBundle.getBundle("MessagesBundle", currentLocale);
 
         // neu set chi tiet ten file thi van lay dc
@@ -1126,6 +1199,7 @@ class Q90 {
     public static void main(String[] args) {
 //        Baz d = new Daze();
 //        d.methodB("Hello");
+
     }
 
     public class Foo {
@@ -1156,6 +1230,53 @@ class Q90 {
     }
 }
 
+class Q91{
+    public static void main(String[] args)  {
+        try {
+            List<String> content = Files.readAllLines(Paths . get ("/home/vtn-thientv7-u/Documents/TestOCP/src/employee.txt")) ;
+            content.stream().forEach(line -> {
+                try {
+                        Files.write(
+                                Paths.get("allemp.txt"), line.getBytes(), StandardOpenOption.APPEND);
+                } catch (IOException e) {
+                    System.out.println("Exception 1");
+                }
+            });
+        }catch (IOException e){ System.out.println("Exception 2"); }
+    }
+}
+
+class Q92{
+    static class Job{
+        String name;
+        Integer cost;
+
+        public Job(String name, Integer cost) {
+            this.name = name;
+            this.cost = cost;
+        }
+
+        String getName() {
+            return name;
+        }
+
+        Integer getCost() {
+            return cost;
+        }
+    }
+
+    public static void main(String[] args) {
+        Job j1 = new Job("IT", null);
+
+//        DoubleSupplier jS1 = j1::getCost;
+//        DoubleSupplier jS1 = null;
+//        ToDoubleFunction<Double> =j1::getCost;
+
+//        System.out.println(j1.getName()+" : "+jS1.getAsDouble());
+
+    }
+}
+
 class Q95 {
     public static void main(String[] args) throws Exception {
         try (DataConverter dc = new DataConverter()) { // line n2
@@ -1165,6 +1286,7 @@ class Q95 {
 
     // neu khong implemen Autocloseable thi loi o n2
     // neu implement thi loi o n1
+//    static class DataConverter implements AutoCloseable {
     static class DataConverter implements AutoCloseable {
         //    class DataConverter {
         public void copyFlatFilesToTables() {
@@ -1206,7 +1328,7 @@ class Q98 {
             this.cost = c;
         }
 
-        public int getCost() {
+        int getCost() {
             return cost;
         }
     }
@@ -1223,7 +1345,12 @@ class Q99 {
             System.out.println("Exception - 1");
         }
 
-        res1.open();
+//        res1.open();
+        try (Resource res2 = new Resource()){
+            res2.open();
+        } catch (Exception e){
+            System.out.println("Exception 2");
+        }
     }
 
     static class Resource implements AutoCloseable {
@@ -1254,7 +1381,7 @@ class Q101 {
         StringBuffer strBuf = new StringBuffer("Course");
         UnaryOperator<String> u = (str2) -> str1.concat(str2); // line n1
         UnaryOperator<String> c = (str3) -> str3.toLowerCase();
-        System.out.println(u.apply(c.apply(str1))); // line n2
+//        System.out.println(u.apply(c.apply(str1))); // line n2
 //        System.out.println(u.apply(c.apply(strBuf))); // line n2
     }
 }
@@ -1295,17 +1422,19 @@ class Q104 { // note
     public static void main(String[] args) {
         Optional<String> city1 = getCountry("Paris");
         Optional<String> city2 = getCountry("Las Vegas");
-        Optional<String> city3 = getCountry("Mumbai");
+//        Optional<String> city3 = getCountry("Mumbai");
         System.out.println(city1.orElse("Not Found"));
 
         if (city2.isPresent()) {
             city2.ifPresent(x -> System.out.println(x));
-        } else if (city3.isPresent()) {
-            // orElse neu khon co gia tri se lay trong else
-            System.out.println(city3.orElse("Not Found"));
-            // neu chi in city3 thi ra Optional[India]
-            System.out.println(city3);
-        } else {
+        }
+//        else if (city3.isPresent()) {
+//            // orElse neu khon co gia tri se lay trong else
+//            System.out.println(city3.orElse("Not Found"));
+//            // neu chi in city3 thi ra Optional[India]
+//            System.out.println(city3);
+//        }
+        else {
             System.out.println(city2.orElse("Not Found"));
         }
     }
@@ -1316,7 +1445,7 @@ class Q105 {
 //        Path ip = new Paths("First.txt");
 //        Path ip = Paths.toPath("/First.txt");
 //        Path ip = new Path("First.txt");
-        Path ip = Paths.get("/", "First.txt");
+        Path ip = Paths.get("/", "First.txt","Second");
 
         System.out.println(ip);
     }
@@ -1342,17 +1471,14 @@ class Q106 {
 class Q107 {
 
     public static void main(String[] args) {
-        new Q107.TestConsole();
-    }
 
-    public static class TestConsole {
         Console console = System.console();
         char[] pass = console.readPassword("Enter pass: "); // line n1
 
         // dung readLine thi tra ve String
 //        String pass = console.readLine("Enter pass: "); // line n1
         String password = new String(pass);
-//        System.out.println(password);
+        System.out.println(password);
     }
 }
 
@@ -1361,10 +1487,10 @@ class Q108 {
     public static void main(String[] args) {
         double d = 15;
         Locale l = new Locale("en", "US");
+//        Locale l =new Locale("vi","VN");
 //        Locale l =new Locale("fr","FR");
-//        Locale l =new Locale("fr","FR");
-        NumberFormat formatter = NumberFormat.getCurrencyInstance(l);
-//        NumberFormat formatter = NumberFormat.getNumberInstance();
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+//        NumberFormat formatter = NumberFormat.getNumberInstance(l);
         System.out.println(formatter.format(d));
     }
 }
@@ -1455,6 +1581,42 @@ class Q115 {
     }
 }
 
+class Vehicle {
+    int vid;
+    String vName;
+
+    public Vehicle(int vidArg, String vNameArg) {
+        this.vid = vidArg;
+        this.vName = vNameArg;
+    }
+
+    public int getVId() {
+        return vid;
+    }
+
+    public String getVName() {
+        return vName;
+    }
+
+    public String tcString() {
+        return vName;
+    }
+}
+
+//class Q116 {
+//    public static void main(String[] args) {
+//        List<Vehicle> vehicle = Arrays.asList(
+//                new Vehicle(2, "Car"),
+//                new Vehicle(3, "Bike"),
+//                new Vehicle(1, "Truck"));
+//        vehicle.stream().sorted(Comparator.comparing((Vehicle e) -> e.getVId())
+//                .
+//
+//
+//
+//    }
+//}
+
 class Q117 {
     public static void main(String[] args) {
         List<String> valList = Arrays.asList("", "George", "", "John", "Jim");
@@ -1467,6 +1629,8 @@ class Q117 {
         System.out.println(newVal);
     }
 }
+
+
 
 class Q118 {
     public static void main(String[] args) throws InterruptedException {
@@ -1495,7 +1659,7 @@ class Q119 {
             return w.equals("do");   // line n1
         };
 
-        Predicate<String> test2 = w -> w.length() > 3; // line n2
+        Predicate<String> test2 = (String w) -> w.length() > 3; // line n2
 //        Predicate test2 = (String w) -> w.length() > 3; // line n2
 
         words.stream()
@@ -1585,6 +1749,7 @@ class Q130 {
         }
     }
 }
+
 
 class Q132 {
     public static void main(String[] args) {
@@ -1698,8 +1863,10 @@ class Q137 { // note
              InputStreamReader isr = new InputStreamReader(fis);
              BufferedReader br = new BufferedReader(isr);) {
             if (br.markSupported()) {
+//                System.out.print((char) br.read());
+//                System.out.print((char) br.read());
                 System.out.print((char) br.read());
-                br.mark(2); // pos 2
+                br.mark(0); // pos 23
                 System.out.print((char) br.read());
                 System.out.print((char) br.read());
                 br.reset();
@@ -1766,13 +1933,13 @@ class Q140 {
 
 class Q141 {
     interface Interface1 {
-        public default void sayHi() {
+        default void sayHi() {
             System.out.println("Hi Interface-1");
         }
     }
 
     interface Interface2 {
-        public default void sayHi() {
+        default void sayHi() {
             System.out.println("Hi Interface -2");
         }
     }
@@ -1785,9 +1952,9 @@ class MyClass implements Q141.Interface1, Q141.Interface2 {
         obj.sayHi();
     }
 
-    @Override
+
     public void sayHi() {
-        System.out.println("Hi Myclass");
+        Q141.Interface1.super.sayHi();
     }
 }
 
@@ -1850,6 +2017,28 @@ class Q144 {
     }
 }
 
+
+class Person {
+    private String firstName;
+    private int salary;
+    public Person(String fN, int sal) { this.firstName = fN; this.salary = sal;}
+        public int getSalary() { return salary; }
+        public String getFirstName () { return firstName; }
+}
+class Q145{
+    public static void main(String[]args){
+        List<Person> prog = Arrays.asList(
+                new Person("Smith", 1500),
+                new Person("John", 2000),
+                new Person("Joe", 1000));
+        double dVal = prog.stream ()
+                .filter(s -> s.getFirstName().startsWith("J")).mapToDouble(Person::getSalary)
+                .average()
+                .getAsDouble() ;
+        System.out.print(dVal);
+    }
+}
+
 class Q147 {
     public static class ResourcesApp {
         public static void main(String[] args) {
@@ -1859,8 +2048,8 @@ class Q147 {
         public void loadResourceBundle() {
             ResourceBundle resource = ResourceBundle.getBundle("Greetings", Locale.UK);
 //            System.out.println(resource.getString("hello_msg"));
-//            System.out.println(resource.getString("HELLO_MSG"));
-            System.out.println(resource.getObject("HELLO_MSG"));
+            System.out.println(resource.getString("HELLO_MSG"));
+//            System.out.println(resource.getObject("HELLO_MSG"));
 //            System.out.println(resource.getString("hello_msg"));
 //            System.out.println(resource.getString("hello_msg")); // phan biet hoa thuong
 //            System.out.println(resource.getObject(1)); // compile fail
@@ -1956,7 +2145,7 @@ class Q150 {
 class Q153 {
     public static void main(String[] args) {
         IntStream str = IntStream.of(1, 2, 3, 4);
-//        Stream str = Stream.of(1, 2, 3, 4);
+//        Stream<Integer> inte = Stream.of(1, 2, 3, 4);
         Double d = str.average().getAsDouble();
         System.out.println("Average = " + d);
     }
@@ -2331,7 +2520,7 @@ class Q197 {
 
 class Q198 {
     public static void main(String[] args) {
-        List<String> codes = Arrays.asList("A", "B", "C", "D");
+        List<String> codes = Arrays.asList("B", "C", "A", "D");
         codes.parallelStream().forEach(s -> System.out.println(s)); // random ket qua in ra
         System.out.println(" ");
         codes.parallelStream().forEachOrdered(s1 -> System.out.println(s1)); // in ra theo thu tu vi da duoc ordered
@@ -2340,12 +2529,12 @@ class Q198 {
 
 class Q201 {
     public static void main(String[] args) {
-        /*Emp e = new Emp() {
+        Emp e = new Emp() {
             @Override
             public void calcLeave() {
                 System.out.println("13");
             }
-        };*/
+        };
 
 //        Emp e = () -> {
 //            public void calcLeave(){
